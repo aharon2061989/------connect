@@ -1,0 +1,10 @@
+<ul class="notifications-list">
+{{#each notifications}}
+  <li class="notification {{#if read}}read{{else}}unread{{/if}}">
+    <h4>{{title}}</h4>
+    <p>{{content}}</p>
+    <small>Date: {{date}}</small>
+    <span>ID: {{id}}</span>
+  </li>
+{{/each}}
+</ul>

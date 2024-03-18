@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home task connect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/./style.css">
+    <script src="https://kit.fontawesome.com/2d863634a2.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars/dist/handlebars.min.js"></script>
+</head>
+<body>
+    <div class="header-container">
+        <div class="icons-container">
+            <div class="icon">
+                <i id="notificationIcon" class="fa-regular fa-bell fa-xl"></i>
+                <br>
+                <span>התראות</span>
+                <span class="notification-badge-main"></span>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-magnifying-glass fa-xl"></i>
+                <br>
+                <span>חיפוש</span>
+            </div>
+            <div class="icon">
+                <i class="fa-solid fa-headset fa-xl"></i>
+                <br>
+                <span>תמיכה</span>
+            </div>
+            <div class="icon">
+                <i class="fa-regular fa-calendar fa-xl"></i>
+                <br>
+                <span>לטיפולך</span>
+                <span class="notification-badge-header">2</span>
+            </div>
+        </div>
+        <div class="header-center-icon">
+            <p>חשבון פתוח</p>
+            <i class="fa-solid fa-cash-register fa-lg" style="color: #ff5252;"></i> 
+        </div>
+        <img src="https://t3.ftcdn.net/jpg/04/48/45/44/240_F_448454487_paforEheKshDVRZZcq2MRxRPYmtLSqu3.jpg" class="logo">
+    </div>
+
+    <aside class="sidebar">
+        <div class="first-icon-group">
+            <div class="side-icon">
+                <i class="fa-sharp fa-solid fa-house fa-xl"></i>
+                <br>
+                <span>ראשי</span>
+            </div>
+            <div class="side-icon">
+                <i class="fa-solid fa-calendar-days fa-xl"></i>
+                <br>
+                <span>יומן</span>
+            </div>
+            <div class="side-icon">
+                <i class="fa-solid fa-cash-register fa-xl"></i>
+                <br>
+                <span>קופה</span>
+            </div>
+            <div class="side-icon">
+                <i class="fa-solid fa-users fa-xl"></i>
+                <br>
+                <span>לקוחות</span>
+            </div>
+        </div>
+        <div class="second-icon-group">
+            <div class="side-icon">
+                <i class="fa-solid fa-store fa-xl"></i>
+                <br>
+                <span>שירותים ופריטים</span>
+            </div>
+            <div class="side-icon">
+                <i class="fa-solid fa-chart-simple fa-xl"></i>
+                <br>
+                <span>דוחות</span>
+            </div>
+            <div class="side-icon">
+                <i class="fa-solid fa-gear fa-xl"></i>
+                <br>
+                <span>הגדרות</span>   
+            </div>
+            <div class="side-icon">
+                <i class="fa-solid fa-user fa-xl"></i>
+                <br>
+                <span>החשבון שלי</span>
+            </div>
+        </div>
+    </aside>
+
+    <div id="notificationsSidebar" class="notifications-sidebar">
+        <div class="notifications-sidebar-icons">
+            <i class="fa-solid fa-x fa-xl" onclick="closeNotificationsSidebar()"></i>
+            <div class="notifications-sidebar-header">
+                <h2>התראות</h2>
+                <i class="fa-regular fa-bell fa-xl"></i>    
+            </div>
+        </div>
+        <div class="tabs">
+            <div class="tab" data-tab="all" onclick="changeTab('all')">כל ההתראות</div>
+            <div class="tab" data-tab="unread" onclick="changeTab('unread')">שלא נקראו</div>
+        </div>
+        <div id="notificationsContainer" class="notifications-container">
+            <div class="notifications-tab all">
+                <ul class="notifications-list"></ul>
+            </div>
+            <div class="notifications-tab unreaded">
+                <ul class="notifications-list"></ul>
+            </div>
+        </div>
+        <div class="notifications-side-buttons">
+            <button id="loadMore" class="load-more">טען עוד</button>
+            <button id="markAllAsRead" class="mark-all" >סמן הכל כנקרא</button>
+        </div>
+    </div>
+
+    <div class="add-notification">
+        <i id="addNotification" class="fa-sharp fa-solid fa-circle-plus fa-3x" style="color: #000000;"></i>
+    </div>
+
+    <div class="add-notification-window" id="addNotificationWindow" dir="rtl">
+        <div class="add-notification-header">
+            <i id="closeAddNotificationWindow" class="fa-solid fa-x fa-xl"></i>
+            <h2>הוספת התראה חדשה</h2>
+        </div>
+        <form id="addNotificationForm" class="add-notification-main">
+            <label for="addNotificationTitle">:כותרת התראה</label>
+            <input type="text" id="addNotificationTitle">
+            <br>
+            <br>
+            <div class="content-container">
+                <label for="addNotificationContent">:תוכן התראה</label>
+                <div id="wordCount"><small>0/100</small></div>
+            </div>
+            <div class="side-buttons">
+
+            </div>
+            <textarea id="addNotificationContent" class="text-area" maxlength="100"></textarea>
+            <button type="submit" id="saveNotificationButton" class="save-button">שמירה</button>
+        </form>
+    </div>
+    <div id="success" class="success-message" style="visibility: hidden;">
+        <h2>ההתראה נוספה בהצלחה</h2>
+    </div>
+    
+    <script id="notificationTemplate" type="text/x-handlebars-template">
+        <ul class="notifications-list">
+        {{#each notifications}}
+          <li class="notification">
+            {{#if read}}
+              <span id="notificationDotSwitch" class="notification-dot notification-dot-gray"></span>
+            {{else}}
+              <span id="notificationDotSwitch" class="notification-dot notification-dot-blue"></span>
+            {{/if}}
+            <small class="date">{{date}}</small>
+            <h4>{{title}}</h4>
+            <p>{{content}}</p>
+          </li>
+        {{/each}}
+        </ul>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
