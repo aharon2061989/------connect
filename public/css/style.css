@@ -13,12 +13,12 @@ body {
   background-color: white;
   height: 70px;
   border-bottom: 1px solid lightgray;
-  max-width: 1450px;
 }
 
 .logo {
   height: 70px;
   width: 150px;
+  margin-right: 50px;
 }
 
 .icons-container {
@@ -95,7 +95,6 @@ body {
   background-color: black;
   color: white;
   width: 70px;
-  height: 780px;
   position: absolute;
   top: 0;
   right: 0;
@@ -128,13 +127,15 @@ i {
   display: none;
   flex-direction: column;
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 330px;
-  max-height: 2000px;
-  min-height: 900px;
+  top: 70px;
+  left: 0;
+  bottom: 0;
+  width: 320px;
   background-color: rgb(241, 241, 241);
   border-radius: 12px;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .notifications-side-buttons {
@@ -144,7 +145,6 @@ i {
   width: auto;
   height: auto;
   margin: 20px;
-  margin-top: 200%;
 }
 
 .notifications-sidebar p {
@@ -172,6 +172,7 @@ i {
   border-bottom: 1px solid black;
   background-color: white;
   padding-left: 5px;
+  padding-right: 15px;
 }
 
 .notifications-sidebar-icons span {
@@ -190,16 +191,11 @@ i {
   padding-top: 5px;
 }
 
-.notification-dot-blue {
-  height: 10px;
-  width: 10px;
+.notification-button {
+  border-radius: 100%;
   background-color: blue;
-  border-radius: 50%;
-  display: flex;
-  float: left;
-  margin-top: 8px;
-  margin-left: 5px;
-  cursor: pointer;
+  color: blue;
+  height: 10px;
 }
 
 .notifications-container {
@@ -331,8 +327,59 @@ ul.notifications-list {
 }
 
 @media only screen and (max-width: 576px) {
-  .normal-style .header-container {
-    margin-right: 0;
+  .notifications-sidebar {
+    width: 207px;
+    top: 37px;
+  }
+  .sidebar {
+    width: 40px;
+    font-size: x-small;
+    padding-right: 15px;
+  }
+  .header-center-icon {
+    display: none;
+  }
+  .header-container {
+    height: 35px;
+  }
+  .icon {
+    font-size: xx-small;
+  }
+  .logo {
+    height: 35px;
+    width: 80px;
+    margin-right: 40px;
+  }
+  .icons-container {
+    margin-top: 5px;
+    padding-bottom: 3px;
+    display: contents;
+  }
+  .notification-badge-header {
+    margin-top: 29px;
+    position: absolute;
+    height: 10px;
+    border-radius: 10px;
+    font-size: xx-small;
+    margin: 0;
+    margin-left: 20px;
+    margin-bottom: 29px;
+  }
+  .notification-badge-main {
+    margin-top: 29px;
+    position: absolute;
+    height: 10px;
+    border-radius: 10px;
+    font-size: xx-small;
+    margin: 0;
+    margin-left: 20px;
+    margin-bottom: 29px;
+  }
+  .add-notification-window {
+    height: 50vh;
+  }
+  .fa-solid {
+    margin-bottom: 0;
   }
 }
 

@@ -10,11 +10,82 @@ app.set('view engine', 'hbs');
 app.use(express.static('public'));
 app.use(express.json());
 
+const readType = {
+  all: 0,
+  read: 1,
+  unread: 2
+}
 
-app.get('/task.json', (req, res) => {
-  const rawData = fs.readFile(path.join(__dirname, 'task.json'));
-  const data = JSON.parse(rawData);
-  res.render('notification', { notifications: data.data[0].notifications });
+/**
+ * Get notifications
+ * @param {number} type 
+ * @returns {object[]}
+ */
+function getNotifications(type = readType.all) {
+  const jsonPath = path.join(__dirname + "/public", 'task.json');
+  let data = fs.readFileSync(jsonPath, 'utf8', (err, data) => {
+    if (err) return res.status(500).send("Error reading the file.");
+  });  
+  data = JSON.parse(data);
+  if(type != readType.all) {
+    if(readType.read) {
+      data = data.filter((notification) => notification.read);    
+    } else {
+      data = data.filter((notification) => notification.read);
+    }
+  }
+  const notifications = data.data[0].notifications;
+  return notifications.sort((a, b) => {
+    const notificationAdateData = new Date(a.date);;
+    const notificationBdateData = new Date(b.date);;
+    return notificationAdateData.getTime() - notificationBdateData.getTime();
+  });
+}
+
+
+/**
+ * @param {number} id 
+ * @returns {object|null}
+ */
+function getNotificationById(id) {
+  const notifications = getNotifications();
+  notifications.forEach((notification) => {
+    if(notification?.id == id){
+      return notification;
+    } 
+  });
+  return null;
+}
+
+/**
+ * 
+ * @param {object|string} fileData 
+ * @returns 
+ */
+function saveNotificationsData(fileData) {
+  fileData = typeof fileData !== 'string' ? JSON.stringify(fileData) : fileData;
+  const jsonPath = path.join(__dirname + "/public", 'task.json');
+  const saveAction = fs.writeFileSync(jsonPath, fileData, {encoding: 'utf-8'}, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Error writing to the file.");
+    }
+  });
+  return saveAction;
+}
+
+
+
+/////////// ROUTES ACTIONS ///////////
+
+app.get('/get-notifications', (req, res) => {
+  let selectedReadType = readType.all;
+  switch (req.query.type) {
+    case readType.read: selectedReadType = readType.read; break;
+    case readType.unread: selectedReadType = readType.unread; break;
+  }
+  const notifications = getNotifications(selectedReadType);
+  res.send(notifications);
 });
 
 app.post('/add-new-notification', (req, res) => {
@@ -52,18 +123,21 @@ app.post('/add-new-notification', (req, res) => {
 });
 
 app.post('/mark-notification-as-read', (req, res) => {
-  const jsonPath = path.join(__dirname + "/public", 'task.json');
-  let fileData = fs.readFileSync(jsonPath, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Error reading the file.");
+  const {id} = req.body;
+  const notifications = getNotifications();
+
+  for (let i = 0; i < notifications.length; i++) {
+    if(notifications[i].id == id) {
+      notifications[i].read = true;
+      break;
     }
-  });
-  fileData = JSON.parse(fileData);
+  }
 
-})
+  const saveResults = saveNotificationsData({data: [{notifications: notifications}]});
+  return res.send(saveResults);
+});
 
-app.post('/mark-all-as-read', (req, res) => {
+app.get('/mark-all-as-read', (req, res) => {
   const jsonPath = path.join(__dirname + "/public", 'task.json');
   let fileData = fs.readFileSync(jsonPath, 'utf8', (err, data) => {
     if (err) {
